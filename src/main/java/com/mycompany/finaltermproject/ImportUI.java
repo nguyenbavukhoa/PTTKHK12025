@@ -4,12 +4,21 @@
  */
 package com.mycompany.finaltermproject;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.mycompany.createGUI.importGUI.AddImportNote;
+import com.mycompany.createGUI.importGUI.ImportNoteDetail;
 import com.sqlConnection.JDBCUtil;
+import java.awt.Color;
+import java.awt.Component;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -19,11 +28,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ImportUI extends javax.swing.JFrame {
 
+    DefaultTableModel phieuNhapTableModel;
+
     /**
      * Creates new form ImportUI
      */
     public ImportUI() {
         initComponents();
+        phieuNhapTableModel = (DefaultTableModel) phieuNhapTable.getModel();
+        setResizable(false);
     }
 
     /**
@@ -34,19 +47,21 @@ public class ImportUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel1 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        backToMenuBtn = new javax.swing.JButton();
+        addImportNoteBtn = new javax.swing.JButton();
+        confirmBtn = new javax.swing.JButton();
+        killNoteBtn = new javax.swing.JButton();
+        detailNoteBtn = new javax.swing.JButton();
+        resetBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        phieuNhapTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -54,47 +69,18 @@ public class ImportUI extends javax.swing.JFrame {
                 formWindowActivated(evt);
             }
         });
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
-        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel4.setPreferredSize(new java.awt.Dimension(900, 40));
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
 
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/win.png"))); // NOI18N
+        jPanel6.setBackground(new java.awt.Color(204, 255, 255));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/fiwi.png"))); // NOI18N
-
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/battery-charging-icon.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 714, Short.MAX_VALUE)
-                .addComponent(jLabel7)
-                .addGap(28, 28, 28)
-                .addComponent(jLabel8)
-                .addGap(14, 14, 14))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
-
-        jPanel6.setBackground(new java.awt.Color(204, 204, 204));
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/import.png"))); // NOI18N
+        jLabel2.setIcon(new FlatSVGIcon("./icon/import.svg"));
         jLabel2.setPreferredSize(new java.awt.Dimension(72, 72));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 3, 48)); // NOI18N
-        jLabel1.setText("Import");
+        jLabel1.setFont(new java.awt.Font("Sitka Text", 1, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel1.setText("PHIẾU NHẬP");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -102,17 +88,18 @@ public class ImportUI extends javax.swing.JFrame {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -122,7 +109,7 @@ public class ImportUI extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(557, Short.MAX_VALUE))
+                .addContainerGap(492, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -132,108 +119,441 @@ public class ImportUI extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        getContentPane().add(jPanel2);
 
-        jButton1.setText("Back");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        backToMenuBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        backToMenuBtn.setText("Back");
+        backToMenuBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                backToMenuBtnActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        jPanel3.add(backToMenuBtn, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        addImportNoteBtn.setBackground(new java.awt.Color(102, 204, 255));
+        addImportNoteBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        addImportNoteBtn.setForeground(new java.awt.Color(255, 255, 255));
+        addImportNoteBtn.setText("Tạo phiếu");
+        addImportNoteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addImportNoteBtn(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        jPanel3.add(addImportNoteBtn, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        confirmBtn.setBackground(new java.awt.Color(102, 204, 0));
+        confirmBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        confirmBtn.setForeground(new java.awt.Color(255, 255, 255));
+        confirmBtn.setText("Xác nhận");
+        confirmBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                confirmBtnActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        jPanel3.add(confirmBtn, gridBagConstraints);
+
+        killNoteBtn.setBackground(new java.awt.Color(255, 102, 102));
+        killNoteBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        killNoteBtn.setForeground(new java.awt.Color(255, 255, 255));
+        killNoteBtn.setText("Hủy phiếu");
+        killNoteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                killNoteBtnActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        jPanel3.add(killNoteBtn, gridBagConstraints);
+
+        detailNoteBtn.setBackground(new java.awt.Color(153, 153, 255));
+        detailNoteBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        detailNoteBtn.setForeground(new java.awt.Color(255, 255, 255));
+        detailNoteBtn.setText("Chi tiết phiếu");
+        detailNoteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                detailNoteBtnActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        jPanel3.add(detailNoteBtn, gridBagConstraints);
+
+        resetBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        resetBtn.setForeground(new java.awt.Color(153, 153, 153));
+        resetBtn.setText("Làm mới");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 20;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 20);
+        jPanel3.add(resetBtn, gridBagConstraints);
+
+        getContentPane().add(jPanel3);
+
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+
+        phieuNhapTable.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
+        phieuNhapTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Mã phiếu nhập", "Thời gian", "Trạng thái", "Mã nhà cung cấp", "Accound ID", "Số lượng", "Tổng tiền"
+            }
+        ));
+        phieuNhapTable.setGridColor(new java.awt.Color(204, 204, 204));
+        phieuNhapTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                phieuNhapTableMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(phieuNhapTable);
+
+        jScrollPane1.getViewport().setBackground(new Color(204,255,255));
+
+        getContentPane().add(jScrollPane1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void backToMenuBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenuBtnActionPerformed
         storageUI storage = new storageUI();
         storage.setLocation(this.getX(), this.getY());
         storage.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_backToMenuBtnActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        try{
+        confirmBtn.setEnabled(false);
+        killNoteBtn.setEnabled(false);
+        try {
             Connection con = JDBCUtil.getConnection();
-            String query =  "SELECT *FROM IMPORT_STATISTIC_SHEET " ;
+            String query = "SELECT "
+                    + "pn.ma_phieu_nhap, "
+                    + "pn.thoi_gian, "
+                    + "pn.trang_thai, "
+                    + "pn.ma_nha_cung_cap, "
+                    + "pn.account_id, "
+                    + "SUM(ct.quantity) AS tong_quantity, "
+                    + "SUM(ct.quantity * CAST(ct.don_gia AS INT)) AS tong_tien "
+                    + "FROM "
+                    + "phieunhap pn "
+                    + "LEFT JOIN "
+                    + "ctphieunhap ct "
+                    + "ON "
+                    + "pn.ma_phieu_nhap = ct.ma_phieu_nhap "
+                    + "GROUP BY "
+                    + "pn.ma_phieu_nhap, pn.thoi_gian, pn.trang_thai, pn.ma_nha_cung_cap, pn.account_id";
 
-            PreparedStatement pr = con.prepareStatement(query);
-            ResultSet resultSet = pr.executeQuery();
-            java.sql.ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            DefaultTableModel defaultTableModel = (DefaultTableModel) jTable1.getModel();
+            ResultSet resultSet = JDBCUtil.getResultSet(con, query);
+            ResultSetMetaData resultSetMetaData = JDBCUtil.getMetaData(resultSet);
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) phieuNhapTable.getModel();
             defaultTableModel.setRowCount(0);
-            
-            JDBCUtil.closeConnection(con);
-            
-            
-            int columnCount = resultSetMetaData.getColumnCount();
-            String[] columnName = new String[columnCount];
-            columnName[0] = "ID";
-            columnName[1] = "Product ID";
-            columnName[2] = "Import price";
-            columnName[3] =  "Statistical day";
 
-            defaultTableModel.setColumnIdentifiers(columnName);
-
-            String id, name, expiry, import_price;
+            String id, thoiGian, trangThai, maNhaCungCap, accountId, tongQuantity, tongTien;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
-                name =  resultSet.getString(2);
-                expiry = resultSet.getString(3);
-                import_price = resultSet.getString(4);
-                String[] row = {id,name,expiry,import_price};
+                thoiGian = resultSet.getString(2);
+                trangThai = resultSet.getString(3);
+                maNhaCungCap = resultSet.getString(4);
+                accountId = resultSet.getString(5);
+                tongQuantity = resultSet.getString(6);
+                tongTien = resultSet.getString(7);
+                String[] row = {id, thoiGian, trangThai, maNhaCungCap, accountId, tongQuantity, tongTien};
                 defaultTableModel.addRow(row);
             }
+            JDBCUtil.closeConnection(con);
+
+            // Tạo renderer tùy chỉnh cho cột Trạng thái
+            phieuNhapTable.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    // Gọi phương thức gốc
+                    Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                    // Kiểm tra giá trị của cột và thay đổi hiển thị
+                    if (value != null) {
+                        // Chuyển giá trị từ String thành Integer
+                        int status = Integer.parseInt((String) value); // Lấy giá trị String và chuyển thành Integer
+                        switch (status) {
+                            case 0 -> {
+                                setText("Chưa giao");
+                                setForeground(Color.DARK_GRAY);  // Màu chữ tối cho "Chưa giao"
+                            }
+                            case 1 -> {
+                                setText("Đã giao");
+                                setForeground(Color.BLUE);  // Màu chữ xanh cho "Đã giao"
+                            }
+                            case 2 -> {
+                                setText("Đã hủy");
+                                setForeground(Color.RED);  // Màu chữ đỏ cho "Đã hủy"
+                            }
+                            default -> {
+                                setText("Không xác định");
+                                comp.setBackground(Color.WHITE); // Màu nền trắng cho giá trị không xác định
+                                setForeground(Color.BLACK);  // Màu chữ đen cho giá trị không xác định
+                            }
+                        }
+                    }
+                    return comp;
+                }
+            });
+
             //jButton1.setEnabled(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }//GEN-LAST:event_formWindowActivated
+
+    private void addImportNoteBtn(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addImportNoteBtn
+        AddImportNote addImportNote = new AddImportNote();
+        addImportNote.setLocation(this.getX() + 20, this.getY() + 20);
+        addImportNote.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        addImportNote.setVisible(true);
+    }//GEN-LAST:event_addImportNoteBtn
+
+    private void confirmBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmBtnActionPerformed
+        // Kiểm tra dòng được chọn
+        int selectedRow = phieuNhapTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng trong bảng!");
+            return;
+        }
+
+        // Lấy giá trị ID từ dòng được chọn
+        String id = phieuNhapTable.getValueAt(selectedRow, 0).toString();
+
+        // // Câu lệnh SQL với tham số `?`
+        String updateProductQuantityQuery = "UPDATE products p "
+                + "SET p.quantity = p.quantity + ("
+                + "    SELECT SUM(ct.quantity) "
+                + "    FROM ctphieunhap ct "
+                + "    WHERE ct.ma_phieu_nhap = ? "
+                + "    AND ct.ma_san_pham = p.id"
+                + ") "
+                + "WHERE EXISTS ("
+                + "    SELECT 1 "
+                + "    FROM ctphieunhap ct "
+                + "    WHERE ct.ma_phieu_nhap = ? "
+                + "    AND ct.ma_san_pham = p.id"
+                + ")";
+
+        try (Connection con = JDBCUtil.getConnection(); PreparedStatement comfirmNote = con.prepareStatement("UPDATE phieunhap SET trang_thai = 1 WHERE ma_phieu_nhap = ?"); PreparedStatement updateProductQuantity = con.prepareStatement(updateProductQuantityQuery)) {
+            comfirmNote.setString(1, id);
+            // Thực thi câu lệnh
+            int rowsUpdated = comfirmNote.executeUpdate();
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Xác nhận phiếu thành công!");
+                // Cập nhật giá trị trong JTable
+                phieuNhapTableModel.setValueAt(1, selectedRow, 2);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy dòng cần cập nhật trong cơ sở dữ liệu.");
+            }
+
+            // Gán giá trị cho tham số `?`
+            updateProductQuantity.setString(1, id); // Tham số đầu tiên
+            updateProductQuantity.setString(2, id); // Tham số thứ hai
+
+            // Thực thi câu lệnh UPDATE
+            int rowsAffected = updateProductQuantity.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Cập nhật thành công! Số dòng bị ảnh hưởng: " + rowsAffected);
+            } else {
+                System.out.println("Không có dữ liệu để cập nhật.");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
+        }
+
+    }//GEN-LAST:event_confirmBtnActionPerformed
+
+    private void phieuNhapTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_phieuNhapTableMouseClicked
+        int selectedRow = phieuNhapTable.getSelectedRow();
+        boolean isRowSelected = selectedRow >= 0;
+        String trangThai = null;
+        if (selectedRow != -1) {
+            // Get values from the selected row
+            trangThai = phieuNhapTable.getValueAt(selectedRow, 2).toString();
+        }
+
+        if (!trangThai.equals("0")) {
+            confirmBtn.setEnabled(false);
+            killNoteBtn.setEnabled(false);
+        } else {
+            confirmBtn.setEnabled(true);
+            killNoteBtn.setEnabled(true);
+        }
+    }//GEN-LAST:event_phieuNhapTableMouseClicked
+
+    private void detailNoteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_detailNoteBtnActionPerformed
+        // Kiểm tra dòng được chọn
+        int selectedRow = phieuNhapTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng trong bảng!");
+            return;
+        }
+
+        // Lấy giá trị ID từ dòng được chọn
+        String id = phieuNhapTable.getValueAt(selectedRow, 0).toString();
+        String trangThai = phieuNhapTable.getValueAt(selectedRow, 2).toString();
+        ImportNoteDetail importNoteDetail = new ImportNoteDetail(id, trangThai);
+        importNoteDetail.setLocation(this.getX() + 20, this.getY() + 20);
+        importNoteDetail.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        importNoteDetail.setVisible(true);
+    }//GEN-LAST:event_detailNoteBtnActionPerformed
+
+    private void killNoteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_killNoteBtnActionPerformed
+        // Kiểm tra dòng được chọn
+        int selectedRow = phieuNhapTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng trong bảng!");
+            return;
+        }
+
+        // Lấy giá trị ID từ dòng được chọn
+        String id = phieuNhapTable.getValueAt(selectedRow, 0).toString();
+
+        try (Connection con = JDBCUtil.getConnection(); PreparedStatement comfirmNote = con.prepareStatement("UPDATE phieunhap SET trang_thai = 2 WHERE ma_phieu_nhap = ?")) {
+            comfirmNote.setString(1, id);
+            // Thực thi câu lệnh
+            int rowsUpdated = comfirmNote.executeUpdate();
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Xác nhận phiếu thành công!");
+                // Cập nhật giá trị trong JTable
+                phieuNhapTableModel.setValueAt(1, selectedRow, 2);
+            } else {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy dòng cần cập nhật trong cơ sở dữ liệu.");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_killNoteBtnActionPerformed
+
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        confirmBtn.setEnabled(false);
+        killNoteBtn.setEnabled(false);
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String query = "SELECT "
+                    + "pn.ma_phieu_nhap, "
+                    + "pn.thoi_gian, "
+                    + "pn.trang_thai, "
+                    + "pn.ma_nha_cung_cap, "
+                    + "pn.account_id, "
+                    + "SUM(ct.quantity) AS tong_quantity, "
+                    + "SUM(ct.quantity * CAST(ct.don_gia AS INT)) AS tong_tien "
+                    + "FROM "
+                    + "phieunhap pn "
+                    + "LEFT JOIN "
+                    + "ctphieunhap ct "
+                    + "ON "
+                    + "pn.ma_phieu_nhap = ct.ma_phieu_nhap "
+                    + "GROUP BY "
+                    + "pn.ma_phieu_nhap, pn.thoi_gian, pn.trang_thai, pn.ma_nha_cung_cap, pn.account_id";
+
+            ResultSet resultSet = JDBCUtil.getResultSet(con, query);
+            ResultSetMetaData resultSetMetaData = JDBCUtil.getMetaData(resultSet);
+
+            DefaultTableModel defaultTableModel = (DefaultTableModel) phieuNhapTable.getModel();
+            defaultTableModel.setRowCount(0);
+
+            String id, thoiGian, trangThai, maNhaCungCap, accountId, tongQuantity, tongTien;
+            while (resultSet.next()) {
+                id = resultSet.getString(1);
+                thoiGian = resultSet.getString(2);
+                trangThai = resultSet.getString(3);
+                maNhaCungCap = resultSet.getString(4);
+                accountId = resultSet.getString(5);
+                tongQuantity = resultSet.getString(6);
+                tongTien = resultSet.getString(7);
+                String[] row = {id, thoiGian, trangThai, maNhaCungCap, accountId, tongQuantity, tongTien};
+                defaultTableModel.addRow(row);
+            }
+            JDBCUtil.closeConnection(con);
+
+            // Tạo renderer tùy chỉnh cho cột Trạng thái
+            phieuNhapTable.getColumnModel().getColumn(2).setCellRenderer(new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    // Gọi phương thức gốc
+                    Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                    // Kiểm tra giá trị của cột và thay đổi hiển thị
+                    if (value != null) {
+                        // Chuyển giá trị từ String thành Integer
+                        int status = Integer.parseInt((String) value); // Lấy giá trị String và chuyển thành Integer
+                        switch (status) {
+                            case 0 -> {
+                                setText("Chưa giao");
+                                setForeground(Color.DARK_GRAY);  // Màu chữ tối cho "Chưa giao"
+                            }
+                            case 1 -> {
+                                setText("Đã giao");
+                                setForeground(Color.BLUE);  // Màu chữ xanh cho "Đã giao"
+                            }
+                            case 2 -> {
+                                setText("Đã hủy");
+                                setForeground(Color.RED);  // Màu chữ đỏ cho "Đã hủy"
+                            }
+                            default -> {
+                                setText("Không xác định");
+                                comp.setBackground(Color.WHITE); // Màu nền trắng cho giá trị không xác định
+                                setForeground(Color.BLACK);  // Màu chữ đen cho giá trị không xác định
+                            }
+                        }
+                    }
+                    return comp;
+                }
+            });
+
+            //jButton1.setEnabled(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_resetBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -271,17 +591,18 @@ public class ImportUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton addImportNoteBtn;
+    private javax.swing.JButton backToMenuBtn;
+    private javax.swing.JButton confirmBtn;
+    private javax.swing.JButton detailNoteBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JButton killNoteBtn;
+    private javax.swing.JTable phieuNhapTable;
+    private javax.swing.JButton resetBtn;
     // End of variables declaration//GEN-END:variables
 }

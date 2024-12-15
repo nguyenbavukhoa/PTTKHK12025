@@ -1,0 +1,228 @@
+CREATE TABLE `products` (
+  `id` varchar(10) NOT NULL,
+  `product_name` varchar(255) DEFAULT NULL,
+  `sell_price` int(11) DEFAULT NULL,
+  `origin` varchar(255) DEFAULT NULL,
+  `supplier` varchar(255) DEFAULT NULL,
+  `product_type` varchar(50) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+CREATE TABLE nha_cung_cap (
+    ma_nha_cung_cap VARCHAR(10) PRIMARY KEY,  -- Mã nhà cung cấp (khóa chính)
+    ten_nha_cung_cap NVARCHAR(255) NOT NULL, -- Tên nhà cung cấp
+    dia_chi NVARCHAR(255),                   -- Địa chỉ nhà cung cấp
+    so_dien_thoai NVARCHAR(20),              -- Số điện thoại
+    email NVARCHAR(50)                       -- Email nhà cung cấp
+);
+
+-- Khởi tạo bảng phieunhap
+CREATE TABLE phieunhap (
+    ma_phieu_nhap VARCHAR(10) PRIMARY KEY,
+    thoi_gian DATE NOT NULL,
+    trang_thai INT NOT NULL,
+    ma_nha_cung_cap VARCHAR(10) NOT NULL,
+    account_id VARCHAR(10) NOT NULL,
+    CONSTRAINT fk_phieunhap_nhacungcap FOREIGN KEY (ma_nha_cung_cap)
+    REFERENCES nha_cung_cap(ma_nha_cung_cap)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+-- Khởi tạo bảng ctphieunhap
+CREATE TABLE ctphieunhap (
+    ma_phieu_nhap VARCHAR(10) NOT NULL,
+    ma_san_pham VARCHAR(10) NOT NULL,
+    quantity INT NOT NULL,
+    don_gia VARCHAR(255) NOT NULL,
+    FOREIGN KEY (ma_phieu_nhap) REFERENCES phieunhap(ma_phieu_nhap),
+    FOREIGN KEY (ma_san_pham) REFERENCES products(id)
+);
+
+
+CREATE TABLE phieuban (
+    ma_phieu_ban VARCHAR(10) PRIMARY KEY,   -- Mã phiếu bán
+    thoi_gian DATE NOT NULL,                -- Thời gian tạo phiếu
+    trang_thai INT NOT NULL,                -- Trạng thái phiếu bán (1: xác nhận, 0: chờ xử lý)
+    khach_hang VARCHAR(10) NOT NULL,        -- Mã khách hàng
+    account_id VARCHAR(10) NOT NULL         -- ID tài khoản nhân viên xử lý
+) 
+
+CREATE TABLE ctphieuban (
+    ma_phieu_ban VARCHAR(10) NOT NULL,      -- Mã phiếu bán
+    ma_san_pham VARCHAR(10) NOT NULL,       -- Mã sản phẩm
+    quantity INT NOT NULL,                  -- Số lượng sản phẩm
+    don_gia INT NOT NULL,                   -- Đơn giá (phải nhỏ hơn sell_price trong bảng products)
+    PRIMARY KEY (ma_phieu_ban, ma_san_pham),-- Khóa chính
+    FOREIGN KEY (ma_phieu_ban) REFERENCES phieuban(ma_phieu_ban)
+        ON DELETE CASCADE ON UPDATE CASCADE, -- Ràng buộc khóa ngoại với phieuban
+    FOREIGN KEY (ma_san_pham) REFERENCES products(id)
+        ON DELETE CASCADE ON UPDATE CASCADE  -- Ràng buộc khóa ngoại với products
+) 
+
+ALTER TABLE ctphieuban ADD COLUMN quantity_returned INT DEFAULT 0;
+
+CREATE TABLE khach_hang (
+    ma_khach_hang VARCHAR(10) PRIMARY KEY,   -- Mã khách hàng
+    ten_khach_hang VARCHAR(255) NOT NULL,   -- Tên khách hàng
+    dia_chi VARCHAR(255),                   -- Địa chỉ
+    so_dien_thoai VARCHAR(15),              -- Số điện thoại
+    email VARCHAR(50)                       -- Email
+) ENGINE=InnoDB;
+
+-- Tạo bảng phieutra
+CREATE TABLE phieu_tra (
+    ma_phieu_tra VARCHAR(10) PRIMARY KEY,  -- Mã phiếu trả
+    thoi_gian DATE NOT NULL,               -- Thời gian trả hàng
+    ma_phieu_ban VARCHAR(10) NOT NULL,     -- Mã phiếu bán liên quan
+    tong_tien BIGINT NOT NULL,             -- Tổng tiền hoàn trả
+    account_id VARCHAR(10) NOT NULL,       -- Mã nhân viên xử lý
+    trang_thai INT DEFAULT 1,              -- Trạng thái: 1 - Đang xử lý, 2 - Hoàn thành
+    FOREIGN KEY (ma_phieu_ban) REFERENCES phieuban(ma_phieu_ban)
+        ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+
+INSERT INTO `products` (`id`, `product_name`, `sell_price`, `origin`, `supplier`, `product_type`, `quantity`) VALUES
+('1', 'Cà Phê ', 30000, 'Việt Nam', 'Trung Nguyên', 'Đồ uống', 100),
+('10', 'Nước Tương', 30000, 'Việt Nam', 'Chinsu', 'Gia vị', 100),
+('11', 'Nước Mắm', 50000, 'Việt Nam', 'Nam Ngư', 'Gia vị', 120),
+('12', 'Sữa Đậu Nà', 15000, 'Việt Nam', 'Fami', 'Đồ uống', 100),
+('13', 'Sữa Tươi có đường', 20000, 'Việt Nam', 'Vinamilk', 'Đồ uống', 90),
+('14', 'Bánh Gạo', 12000, 'Việt Nam', 'OneOne', 'Bánh kẹo', 70),
+('15', 'Sữa Chua', 15000, 'Việt Nam', 'Vinamilk', 'Đồ uống', 100),
+('16', 'Rau Củ', 30000, 'Việt Nam', 'Co.op Mart', 'Thực phẩm', 150),
+('17', 'Thịt Heo', 100000, 'Việt Nam', 'Vissan', 'Thực phẩm', 60),
+('18', 'Khẩu Trang', 25000, 'Việt Nam', 'May Nhà Bè', 'Y tế', 300),
+('19', 'Xà Phòng', 20000, 'Việt Nam', 'Lifebuoy', 'Hóa mỹ phẩm', 90),
+('2', 'Trà Sữa', 25000, 'Việt Nam', 'Vinamilk', 'Đồ uống', 120),
+('20', 'Bột Giặt', 50000, 'Việt Nam', 'Omo', 'Hóa mỹ phẩm', 80),
+('3', 'Bánh Mì', 10000, 'Việt Nam', 'ABC Bakery', 'Bánh ngọt', 80),
+('4', 'Bánh Choco', 18000, 'Hàn Quốc', 'Orion', 'Bánh kẹo', 60),
+('5', 'Snack Khoa', 12000, 'Việt Nam', 'Oishi', 'Đồ ăn nhẹ', 100),
+('6', 'Bia Sài Gò', 25000, 'Việt Nam', 'Sabeco', 'Đồ uống', 200),
+('7', 'Bia Hà Nội', 22000, 'Việt Nam', 'Habeco', 'Đồ uống', 180),
+('8', 'Mì Tôm', 5000, 'Việt Nam', 'Acecook', 'Thực phẩm', 510),
+('9', 'Dầu Ăn', 40000, 'Việt Nam', 'Tường An', 'Gia vị', 90),
+('SP001', 'Cà phê Trung Nguyên', 55000, 'Việt Nam', 'Trung Nguyên', 'Đồ uống', 100),
+('SP002', 'Nước cam Ép', 45000, 'Việt Nam', 'Tropicana', 'Nước uống', 200);
+
+
+
+INSERT INTO nha_cung_cap (ma_nha_cung_cap, ten_nha_cung_cap, dia_chi, so_dien_thoai, email)
+VALUES
+('NCC001', 'Công ty A', 'Hà Nội', '0123456789', 'a@example.com'),
+('NCC002', 'Công ty B', 'Hồ Chí Minh', '0123456790', 'b@example.com'),
+('NCC003', 'Công ty C', 'Đà Nẵng', '0123456791', 'c@example.com'),
+('NCC004', 'Công ty D', 'Hải Phòng', '0123456792', 'd@example.com'),
+('NCC005', 'Công ty E', 'Cần Thơ', '0123456793', 'e@example.com'),
+('NCC006', 'Công ty F', 'Vũng Tàu', '0123456794', 'f@example.com'),
+('NCC007', 'Công ty G', 'Nha Trang', '0123456795', 'g@example.com'),
+('NCC008', 'Công ty H', 'Huế', '0123456796', 'h@example.com');
+
+-- Tạo dữ liệu mẫu cho bảng phieunhap
+INSERT INTO phieunhap (ma_phieu_nhap, thoi_gian, trang_thai, ma_nha_cung_cap, account_id)
+VALUES
+('PN001', '2024-12-01', 1, 'NCC001', 'TK001'),
+('PN002', '2024-12-02', 1, 'NCC002', 'TK002'),
+('PN003', '2024-12-03', 1, 'NCC003', 'TK003'),
+('PN004', '2024-12-04', 1, 'NCC004', 'TK004'),
+('PN005', '2024-12-05', 1, 'NCC005', 'TK005'),
+('PN006', '2024-12-06', 1, 'NCC006', 'TK006'),
+('PN007', '2024-12-07', 1, 'NCC007', 'TK007'),
+('PN008', '2024-12-08', 1, 'NCC008', 'TK008');
+
+-- Tạo dữ liệu mẫu cho bảng ctphieunhap
+INSERT INTO ctphieunhap (ma_phieu_nhap, ma_san_pham, quantity, don_gia)
+VALUES
+('PN001', '4', 10, 12000),
+('PN001', '14', 15, 8000),
+('PN001', '3', 20, 5000),
+('PN002', '7', 25, 12000),
+('PN002', '6', 30, 15000),
+('PN003', '20', 10, 30000),
+('PN003', '8', 15, 4000),
+('PN003', '9', 12, 25000),
+('PN004', '18', 18, 15000),
+('PN004', '11', 14, 30000),
+('PN004', '13', 16, 15000),
+('PN005', '12', 20, 12000),
+('PN005', '15', 22, 10000),
+('PN006', '1', 30, 12000),
+('PN006', '19', 18, 10000),
+('PN006', '17', 25, 70000),
+('PN007', '10', 12, 20000),
+('PN007', '5', 14, 7000),
+('PN007', '2', 10, 20000),
+('PN008', '16', 28, 25000);
+
+
+INSERT INTO `phieuban` (ma_phieu_ban, thoi_gian, trang_thai, khach_hang, account_id) VALUES
+('PB001', '2024-12-01', 1, 'KH001', 'TK001'),
+('PB002', '2024-12-02', 1, 'KH002', 'TK002'),
+('PB003', '2024-12-03', 1, 'KH003', 'TK003'),
+('PB004', '2024-12-04', 1, 'KH004', 'TK004'),
+('PB005', '2024-12-05', 1, 'KH005', 'TK005'),
+('PB006', '2024-12-06', 1, 'KH006', 'TK006'),
+('PB007', '2024-12-07', 1, 'KH007', 'TK007'),
+('PB008', '2024-12-08', 1, 'KH008', 'TK008'),
+('PB009', '2024-12-09', 1, 'KH009', 'TK009'),
+('PB010', '2024-12-10', 1, 'KH010', 'TK010'),
+('PB0011','2024-12-15', 1, 'KH001', 'TK001');
+
+
+INSERT INTO ctphieuban (ma_phieu_ban, ma_san_pham, quantity, don_gia) VALUES
+-- PB001
+('PB001', '1', 5, 27000),  -- 27000 < 30000
+('PB001', '10', 4, 25000), -- 25000 < 30000
+-- PB002
+('PB002', '11', 6, 45000), -- 45000 < 50000
+('PB002', '12', 8, 14000), -- 14000 < 15000
+-- PB003
+('PB003', '13', 10, 18000), -- 18000 < 20000
+('PB003', '14', 7, 10000),  -- 10000 < 12000
+-- PB004
+('PB004', '15', 6, 13000), -- 13000 < 15000
+('PB004', '16', 8, 27000), -- 27000 < 30000
+-- PB005
+('PB005', '17', 4, 90000),  -- 90000 < 100000
+('PB005', '18', 10, 23000), -- 23000 < 25000
+-- PB006
+('PB006', '19', 5, 18000),  -- 18000 < 20000
+('PB006', '20', 3, 40000),  -- 40000 < 50000
+-- PB007
+('PB007', '2', 8, 22000),   -- 22000 < 25000
+('PB007', '3', 12, 9000),   -- 9000 < 10000
+-- PB008
+('PB008', '4', 7, 15000),   -- 15000 < 18000
+('PB008', '5', 10, 10000),  -- 10000 < 12000
+-- PB009
+('PB009', '6', 9, 20000),   -- 20000 < 25000
+('PB009', '7', 11, 19000),  -- 19000 < 22000
+-- PB010
+('PB010', '8', 15, 4000),   -- 4000 < 5000
+('PB010', '9', 10, 35000);  -- 35000 < 40000
+
+
+-- PB011
+INSERT INTO ctphieuban (ma_phieu_ban, ma_san_pham, quantity, quantity_returned, don_gia)
+VALUES 
+('PB0011', 'SP001', 5, 2, 50000),  -- Sản phẩm SP001: Bán 5, trả 2
+('PB0011', 'SP002', 3, 1, 45000);  -- Sản phẩm SP002: Bán 3, trả 1
+
+
+INSERT INTO khach_hang (ma_khach_hang, ten_khach_hang, dia_chi, so_dien_thoai, email) VALUES
+('KH001', 'Nguyen Van A', 'Hà Nội', '0123456789', 'a@example.com'),
+('KH002', 'Tran Thi B', 'Hồ Chí Minh', '0123456790', 'b@example.com'),
+('KH003', 'Le Van C', 'Đà Nẵng', '0123456791', 'c@example.com'),
+('KH004', 'Pham Thi D', 'Hải Phòng', '0123456792', 'd@example.com'),
+('KH005', 'Hoang Van E', 'Cần Thơ', '0123456793', 'e@example.com'),
+('KH006', 'Nguyen Thi F', 'Vũng Tàu', '0123456794', 'f@example.com'),
+('KH007', 'Tran Van G', 'Nha Trang', '0123456795', 'g@example.com'),
+('KH008', 'Le Thi H', 'Huế', '0123456796', 'h@example.com'),
+('KH009', 'Pham Van I', 'Quảng Nam', '0123456797', 'i@example.com'),
+('KH010', 'Hoang Thi J', 'Thanh Hóa', '0123456798', 'j@example.com');
+
+INSERT INTO phieu_tra (ma_phieu_tra, thoi_gian, ma_phieu_ban, account_id, trang_thai)
+VALUES ('PT001', '2024-12-16', 'PB0011', 'NV001', 1);

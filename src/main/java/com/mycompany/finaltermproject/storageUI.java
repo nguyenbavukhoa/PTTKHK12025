@@ -5,10 +5,12 @@
 package com.mycompany.finaltermproject;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.mycompany.createGUI.AddProduct;
-import com.mycompany.createGUI.EditProduct;
+import com.mycompany.createGUI.productGUI.AddProduct;
+import com.mycompany.createGUI.productGUI.EditProduct;
 import com.mycompany.createGUI.EditQuantity;
-import com.sqlConnection.Function;
+import com.mycompany.createGUI.importGUI.AddImportNote;
+import com.mycompany.setUpJTable.CheckQuantityCellRenderer;
+import com.mycompany.HandlerClass.Function;
 import com.sqlConnection.JDBCUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +19,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -27,11 +30,15 @@ import javax.swing.table.DefaultTableModel;
  */
 public class storageUI extends javax.swing.JFrame {
 
+    String productQueryString = null;
+    DefaultTableModel productTableModel;
+
     /**
      * Creates new form storageUI
      */
     public storageUI() {
         initComponents();
+        productTableModel = this.productTableModel = (DefaultTableModel) productTable.getModel();
     }
 
     /**
@@ -116,6 +123,7 @@ public class storageUI extends javax.swing.JFrame {
         });
 
         jButton3.setText("Edit quantity");
+        jButton3.setEnabled(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -154,15 +162,12 @@ public class storageUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(134, 134, 134)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)))
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -173,12 +178,12 @@ public class storageUI extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton5)
-                            .addComponent(jButton6)
-                            .addComponent(jButton3))
+                            .addComponent(jButton6))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton2)
-                            .addComponent(jButton1))
+                            .addComponent(jButton1)
+                            .addComponent(jButton3))
                         .addContainerGap())
                     .addComponent(Logo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
@@ -296,13 +301,13 @@ public class storageUI extends javax.swing.JFrame {
 
         productTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Tên sản phẩm", "Giá nhập TB", "Giá Bán", "Xuất xứ", "Nhà cung cấp", "Phân loại", "Số lượng"
             }
         ));
         productTable.setGridColor(new java.awt.Color(204, 255, 255));
@@ -326,32 +331,28 @@ public class storageUI extends javax.swing.JFrame {
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = JDBCUtil.getConnection();
-            String query = "SELECT * "
-                    + "FROM PRODUCTS pr ";
 
-            ResultSet resultSet = JDBCUtil.getResultSet(con, query);
+            ResultSet resultSet = JDBCUtil.getResultSet(con, productQueryString);
+
             ResultSetMetaData resultSetMetaData = JDBCUtil.getMetaData(resultSet);
 
-            DefaultTableModel defaultTableModel = (DefaultTableModel) productTable.getModel();
-            defaultTableModel.setRowCount(0);
+            productTableModel.setRowCount(0);
 
-            String[] columnName = Function.getColumnName(resultSetMetaData);
-
-            defaultTableModel.setColumnIdentifiers(columnName);
-
-            String id, name, expiry, import_price, sell_price, quantity, product_type, origin;
+            String id, name, import_avg_price, sell_price, quantity, product_type, origin, supplier;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
                 name = resultSet.getString(2);
-                expiry = resultSet.getString(3);
-                import_price = resultSet.getString(4);
-                sell_price = resultSet.getString(5);
-                origin = resultSet.getString(6);
-                quantity = resultSet.getString(7);
-                product_type = resultSet.getString(8);
-                String[] row = {id, name, expiry, import_price, sell_price, origin, quantity, product_type};
-                defaultTableModel.addRow(row);
+                import_avg_price = Function.dinhDangTien(Long.parseLong(resultSet.getString(3).split("\\.")[0]));
+                sell_price = resultSet.getString(4);
+                origin = resultSet.getString(5);
+                supplier = resultSet.getString(6);
+                product_type = resultSet.getString(7);
+                quantity = resultSet.getString(8);
+                String[] row = {id, name, import_avg_price, sell_price, origin, supplier, product_type, quantity};
+                productTableModel.addRow(row);
             }
+            productTable.setDefaultRenderer(Object.class, new CheckQuantityCellRenderer(7, 20));
+            JDBCUtil.closeConnection(con);
             //jButton1.setEnabled(false);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -364,33 +365,30 @@ public class storageUI extends javax.swing.JFrame {
         }
         try {
             Connection con = JDBCUtil.getConnection();
-            String query = "SELECT * "
-                    + "FROM PRODUCTS pr "
-                    + "WHERE pr.product_name LIKE ?";
+            StringBuilder query = new StringBuilder(productQueryString);
+            query.append("HAVING pr.product_name LIKE ?");
 
-            ResultSet resultSet = JDBCUtil.getResultSet(con, query, 1, "%" + SearchTextField.getText() + "%");
+            ResultSet resultSet = JDBCUtil.getResultSet(con, query.toString(), 1, "%" + SearchTextField.getText() + "%");
+
             ResultSetMetaData resultSetMetaData = JDBCUtil.getMetaData(resultSet);
 
-            DefaultTableModel defaultTableModel = (DefaultTableModel) productTable.getModel();
-            defaultTableModel.setRowCount(0);
+            productTableModel.setRowCount(0);
 
-            String[] columnName = Function.getColumnName(resultSetMetaData);
-
-            defaultTableModel.setColumnIdentifiers(columnName);
-
-            String id, name, expiry, import_price, sell_price, quantity, product_type, origin;
+            String id, name, import_avg_price, sell_price, quantity, product_type, origin, supplier;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
                 name = resultSet.getString(2);
-                expiry = resultSet.getString(3);
-                import_price = resultSet.getString(4);
-                sell_price = resultSet.getString(5);
-                origin = resultSet.getString(6);
-                quantity = resultSet.getString(7);
-                product_type = resultSet.getString(8);
-                String[] row = {id, name, expiry, import_price, sell_price, origin, quantity, product_type};
-                defaultTableModel.addRow(row);
+                import_avg_price = Function.dinhDangTien(Long.parseLong(resultSet.getString(3).split("\\.")[0]));
+                sell_price = resultSet.getString(4);
+                origin = resultSet.getString(5);
+                supplier = resultSet.getString(6);
+                product_type = resultSet.getString(7);
+                quantity = resultSet.getString(8);
+                String[] row = {id, name, import_avg_price, sell_price, origin, supplier, product_type, quantity};
+                productTableModel.addRow(row);
             }
+            productTable.setDefaultRenderer(Object.class, new CheckQuantityCellRenderer(7, 20));
+            JDBCUtil.closeConnection(con);
 
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -428,54 +426,74 @@ public class storageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_SearchTextFieldFocusGained
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
-        try {
-            //Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = JDBCUtil.getConnection();
-            String query = "SELECT * "
-                    + "FROM PRODUCTS pr ";
 
-            ResultSet resultSet = JDBCUtil.getResultSet(con, query);
+        productQueryString = "SELECT"
+                + "    pr.id AS ma_san_pham,"
+                + "    pr.product_name,"
+                + "    AVG(CAST(ct.don_gia AS INT)) AS gia_nhap_trung_binh,"
+                + "    pr.sell_price,"
+                + "    pr.origin,"
+                + "    pr.supplier,"
+                + "    pr.product_type,"
+                + "    pr.quantity "
+                + "FROM "
+                + "    products pr "
+                + "LEFT JOIN ctphieunhap ct ON"
+                + "    pr.id = ct.ma_san_pham "
+                + "GROUP BY "
+                + "    pr.id,"
+                + "    pr.product_name,"
+                + "    pr.sell_price,"
+                + "    pr.origin,"
+                + "    pr.supplier,"
+                + "    pr.product_type,"
+                + "    pr.quantity ";
+        try (Connection con = JDBCUtil.getConnection()) {
+            ResultSet resultSet = JDBCUtil.getResultSet(con, productQueryString);
+
             ResultSetMetaData resultSetMetaData = JDBCUtil.getMetaData(resultSet);
 
-            DefaultTableModel defaultTableModel = (DefaultTableModel) productTable.getModel();
-            defaultTableModel.setRowCount(0);
+            productTableModel.setRowCount(0);
 
-            String[] columnName = Function.getColumnName(resultSetMetaData);
-
-            defaultTableModel.setColumnIdentifiers(columnName);
-
-            String id, name, expiry, import_price, sell_price, quantity, product_type, origin;
+            String id, name, import_avg_price, sell_price, quantity, product_type, origin, supplier;
             while (resultSet.next()) {
                 id = resultSet.getString(1);
                 name = resultSet.getString(2);
-                expiry = resultSet.getString(3);
-                import_price = resultSet.getString(4);
-                sell_price = resultSet.getString(5);
-                origin = resultSet.getString(6);
-                quantity = resultSet.getString(7);
-                product_type = resultSet.getString(8);
-                String[] row = {id, name, expiry, import_price, sell_price, origin, quantity, product_type};
-                defaultTableModel.addRow(row);
+                import_avg_price = Function.dinhDangTien(Long.parseLong(resultSet.getString(3).split("\\.")[0]));
+                sell_price = resultSet.getString(4);
+                origin = resultSet.getString(5);
+                supplier = resultSet.getString(6);
+                product_type = resultSet.getString(7);
+                quantity = resultSet.getString(8);
+                String[] row = {id, name, import_avg_price, sell_price, origin, supplier, product_type, quantity};
+                productTableModel.addRow(row);
             }
-            //jButton1.setEnabled(false);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            productTable.setDefaultRenderer(Object.class, new CheckQuantityCellRenderer(7, 20));
+        } catch (SQLException ex) {
+            Logger.getLogger(storageUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowActivated
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        ImportUI importUI = new ImportUI();
-        importUI.setLocation(this.getX(), this.getY());
-        importUI.setVisible(true);
-        this.dispose();
+        int selectedRow = productTable.getSelectedRow();
+        if (selectedRow != -1) {
+            AddImportNote addImportNote = new AddImportNote((String) productTable.getValueAt(selectedRow, 0));
+            addImportNote.setLocation(this.getX()+20, this.getY()+20);
+            addImportNote.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            addImportNote.setVisible(true);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng!");
+        }
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void deleteProduct(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProduct
         // Hiển thị thông báo xác nhận xóa
         int confirm = JOptionPane.showConfirmDialog(null,
-            "Bạn có chắc chắn muốn xóa sản phẩm này?",
-            "Xác nhận xóa",
-            JOptionPane.YES_NO_OPTION);
+                "Bạn có chắc chắn muốn xóa sản phẩm này?",
+                "Xác nhận xóa",
+                JOptionPane.YES_NO_OPTION);
 
         // Nếu người dùng chọn "Có"
         if (confirm == JOptionPane.YES_OPTION) {
@@ -493,7 +511,9 @@ public class storageUI extends javax.swing.JFrame {
                     int rowsDeleted = JDBCUtil.getPreparedStatement(con, sql, 1, productId).executeUpdate();
 
                     if (rowsDeleted > 0) {
+                        productTableModel.removeRow(selectedRow);
                         JOptionPane.showMessageDialog(null, "Đã xóa sản phẩm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Không tìm thấy sản phẩm để xóa.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
@@ -512,18 +532,17 @@ public class storageUI extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteProduct
 
     private void editProduct(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProduct
-
         int selectedRow = productTable.getSelectedRow();
         if (selectedRow != -1) {
-            EditProduct editProduct = null;
             try {
-                editProduct = new EditProduct((String) productTable.getValueAt(selectedRow, 0));
+                EditProduct editProduct = new EditProduct((String) productTable.getValueAt(selectedRow, 0));
+                editProduct.setLocation(this.getX() + 20, this.getY() + 20);
+                editProduct.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                editProduct.setVisible(true);
             } catch (SQLException ex) {
                 Logger.getLogger(storageUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            editProduct.setLocation(this.getX(), this.getY());
-            editProduct.setVisible(true);
-            this.dispose();
+
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một dòng!");
         }
@@ -531,22 +550,23 @@ public class storageUI extends javax.swing.JFrame {
 
     private void addProduct(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProduct
         AddProduct addProduct = new AddProduct();
-        addProduct.setLocation(this.getX(), this.getY());
+        addProduct.setLocation(this.getX() + 20, this.getY() + 20);
+        addProduct.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addProduct.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_addProduct
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         EditQuantity editQuantity = new EditQuantity();
-        editQuantity.setLocationRelativeTo(null);
+        editQuantity.setLocation(this.getX() + 20, this.getY() + 20);
+        editQuantity.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         editQuantity.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        SupplierUI supplierUI = new SupplierUI();
-        supplierUI.setLocation(this.getX(), this.getY());
-        supplierUI.setVisible(true);
+        SupplierGUI supplierGUI = new SupplierGUI();
+        supplierGUI.setLocation(this.getX()+20, this.getY()+20);
+        supplierGUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        supplierGUI.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -613,12 +633,11 @@ public class storageUI extends javax.swing.JFrame {
         String filterOption = (String) jComboBox2.getSelectedItem();
         //filterOption = filterOption.toLowerCase();
 
-        StringBuilder query = new StringBuilder("SELECT *"
-                + "FROM PRODUCTS pr ");
+        StringBuilder query = new StringBuilder(productQueryString);
 
         boolean hasFilter = !filterOption.equals("Filter by type");
         if (hasFilter) {
-            query.append(" WHERE pr.product_type = ?");
+            query.append("HAVING pr.product_type = ?");
         }
 
         switch (sortOption) {
@@ -648,10 +667,9 @@ public class storageUI extends javax.swing.JFrame {
             }
 
             ResultSet resultSet = pr.executeQuery();
-            DefaultTableModel defaultTableModel = (DefaultTableModel) productTable.getModel();
 
             // Clear the current data in the table
-            defaultTableModel.setRowCount(0);
+            productTableModel.setRowCount(0);
 
             // Add rows to the table model
             while (resultSet.next()) {
@@ -659,8 +677,10 @@ public class storageUI extends javax.swing.JFrame {
                 for (int i = 0; i < 8; i++) {
                     row[i] = resultSet.getString(i + 1);
                 }
-                defaultTableModel.addRow(row);
+                productTableModel.addRow(row);
             }
+
+            JDBCUtil.closeConnection(con);
 
         } catch (SQLException e) {
             e.printStackTrace();
