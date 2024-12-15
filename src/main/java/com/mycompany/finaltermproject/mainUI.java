@@ -119,7 +119,7 @@ public class mainUI extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(20, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(20, 20, 10, 10);
         chucNang.add(storageBtn, gridBagConstraints);
 
         createImportBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -135,23 +135,23 @@ public class mainUI extends javax.swing.JFrame {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 10);
         chucNang.add(createImportBtn, gridBagConstraints);
 
         returnInvoiceBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         returnInvoiceBtn.setText("Phiếu trả hàng");
-        returnInvoiceBtn.setMargin(new java.awt.Insets(2, 65, 3, 65));
+        returnInvoiceBtn.setMargin(new java.awt.Insets(2, 40, 3, 40));
         returnInvoiceBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 returnInvoiceBtnActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 20);
         chucNang.add(returnInvoiceBtn, gridBagConstraints);
 
         salesBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -163,11 +163,11 @@ public class mainUI extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(20, 10, 10, 20);
         chucNang.add(salesBtn, gridBagConstraints);
 
         thongkeBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -181,10 +181,10 @@ public class mainUI extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 20, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 10);
         chucNang.add(thongkeBtn, gridBagConstraints);
 
         salesInvoiceBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -195,11 +195,11 @@ public class mainUI extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 20);
         chucNang.add(salesInvoiceBtn, gridBagConstraints);
 
         importBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -211,10 +211,10 @@ public class mainUI extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 10);
         chucNang.add(importBtn, gridBagConstraints);
 
         customerBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -226,10 +226,10 @@ public class mainUI extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 20, 10, 10);
         chucNang.add(customerBtn, gridBagConstraints);
 
         supplierBtn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -240,11 +240,11 @@ public class mainUI extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 10;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 20);
         chucNang.add(supplierBtn, gridBagConstraints);
 
         Menu.add(chucNang);
@@ -282,6 +282,7 @@ public class mainUI extends javax.swing.JFrame {
         CustomerReturnInvoiceGUI customerReturnInvoiceGUI = new CustomerReturnInvoiceGUI();
         customerReturnInvoiceGUI.setLocation(this.getX()+20,this.getY()+20);
         customerReturnInvoiceGUI.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_returnInvoiceBtnActionPerformed
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
