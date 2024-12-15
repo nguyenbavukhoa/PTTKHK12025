@@ -41,6 +41,8 @@ public class ImportNoteDetail extends javax.swing.JFrame {
     public ImportNoteDetail(String id, String trangThai) {
         initComponents();
         idPhieuNhap = id;
+        
+        System.out.println(id + trangThai);
 
         if (!trangThai.equals("0")) {
             confirmNoteBtn.setEnabled(false);
@@ -60,7 +62,7 @@ public class ImportNoteDetail extends javax.swing.JFrame {
                 + " Join products pr "
                 + " On pr.id = ctp.ma_san_pham "
                 + " Join nha_cung_cap ncp"
-                + " On p.ma_nha_cung_cap = nha_cung_cap.ma_nha_cung_cap "
+                + " On p.ma_nha_cung_cap = ncp.ma_nha_cung_cap "
                 + " Where ctp.ma_phieu_nhap = ?";
 
         try (Connection con = JDBCUtil.getConnection(); ResultSet resultSet = JDBCUtil.getResultSet(con, query, 1, id)) {

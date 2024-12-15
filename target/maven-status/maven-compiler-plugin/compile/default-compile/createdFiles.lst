@@ -13,6 +13,7 @@ com\mycompany\createGUI\importGUI\AddImportNote$7.class
 com\mycompany\createGUI\salesInvoiceGUI\SalesInvoiceDetail$9.class
 com\mycompany\createGUI\supplierGUI\AddSupplier.class
 com\mycompany\createGUI\customerGUI\AddCustomer$6.class
+com\mycompany\finaltermproject\mainUI$9.class
 com\mycompany\createGUI\importGUI\ImportNoteDetail$6.class
 com\mycompany\createGUI\supplierGUI\AddSupplier$6.class
 com\mycompany\createGUI\importGUI\AddImportNote$2.class
@@ -114,6 +115,7 @@ com\mycompany\finaltermproject\ImportUI$9.class
 com\mycompany\createGUI\importGUI\AddImportNote$8.class
 com\mycompany\createGUI\importGUI\ImportNoteDetail$7.class
 com\mycompany\finaltermproject\CustomerGUI$2.class
+com\mycompany\finaltermproject\mainUI$12.class
 com\mycompany\createGUI\importGUI\AddImportNote.class
 com\mycompany\finaltermproject\storageUI$16.class
 com\mycompany\createGUI\productGUI\EditProduct.class
@@ -150,6 +152,7 @@ com\mycompany\createGUI\salesInvoiceGUI\AddSalesInvoice$6.class
 com\mycompany\finaltermproject\SupplierGUI$4.class
 com\mycompany\finaltermproject\CustomerGUI$4.class
 com\mycompany\finaltermproject\SalesInvoiceGUI$5.class
+com\mycompany\finaltermproject\mainUI$10.class
 com\mycompany\finaltermproject\ImportUI$10.class
 com\mycompany\createGUI\productGUI\AddProduct$7.class
 com\mycompany\createGUI\importGUI\AddImportNote$4.class
@@ -168,6 +171,7 @@ com\mycompany\finaltermproject\SalesInvoiceGUI$6.class
 com\mycompany\finaltermproject\CustomerGUI$11.class
 com\mycompany\createGUI\productGUI\EditProduct$5.class
 com\mycompany\finaltermproject\SupplierGUI$3.class
+com\mycompany\finaltermproject\mainUI$11.class
 com\mycompany\createGUI\importGUI\AddImportNote$9.class
 com\mycompany\createGUI\salesInvoiceGUI\SalesInvoiceDetail$8.class
 com\mycompany\createGUI\importGUI\AddImportNote$6.class

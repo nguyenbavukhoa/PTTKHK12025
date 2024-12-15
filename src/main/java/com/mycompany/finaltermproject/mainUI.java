@@ -275,13 +275,13 @@ public class mainUI extends javax.swing.JFrame {
     }
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        CustomerReturnInvoiceGUI customerReturnInvoiceGUI = new CustomerReturnInvoiceGUI();
-        customerReturnInvoiceGUI.setLocation(this.getX()+20,this.getY()+20);
-        customerReturnInvoiceGUI.setVisible(true);
+        
     }//GEN-LAST:event_formWindowClosed
 
     private void returnInvoiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_returnInvoiceBtnActionPerformed
-
+        CustomerReturnInvoiceGUI customerReturnInvoiceGUI = new CustomerReturnInvoiceGUI();
+        customerReturnInvoiceGUI.setLocation(this.getX()+20,this.getY()+20);
+        customerReturnInvoiceGUI.setVisible(true);
     }//GEN-LAST:event_returnInvoiceBtnActionPerformed
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
